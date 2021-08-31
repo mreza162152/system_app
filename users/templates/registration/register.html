@@ -2,17 +2,12 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-<form action="{% url 'users:login' %}" method="post">
+<form action="{% url 'users:register' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 
-    <button type="submit">Log in</button>
+    <button type="submit">Register</button>
     <input type="hidden" name="next" value="{% url 'system_app:index' %}">
 </form>
-
 
 {% endblock content %}
