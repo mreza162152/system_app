@@ -6,12 +6,14 @@ from django.shortcuts import render
 from collections import defaultdict
 from .models import Charts
 
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def index(request):
     return render(request, 'system_app/index.html')
 
-
+@login_required
 def load_data(request):
     module_dir = os.path.dirname('D://Visual Exercise//Django//charts_venv//')  
     file_path = os.path.join(module_dir, 'test.txt')  
@@ -47,7 +49,7 @@ def load_data(request):
             # context = {'data_dict':data_dict}
     return render(request, 'system_app/load_data.html')
 
-
+@login_required
 def show_data(request):
     all_data = Charts.objects.all()
     all_data = all_data[:10]

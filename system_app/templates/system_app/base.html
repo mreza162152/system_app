@@ -17,7 +17,6 @@
         <a href="{% url 'system_app:index' %}">Home</a>
         <a href="{% url 'system_app:load_data' %}">Load Data</a>
         <a href="{% url 'system_app:show_data' %}">Show Data</a>
-        <a href="{% url 'system_app:show_data' %}">Show Data</a>
         {% if user.is_authenticated %}
         Hello, {{ user.username }}
         <a href="{% url 'users:logout' %}">Log out</a>
