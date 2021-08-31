@@ -1,0 +1,6 @@
+charts_venv/
+*.log
+*.pot
+*.pyc
+__pycache__
+media

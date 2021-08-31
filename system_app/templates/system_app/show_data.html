@@ -1,0 +1,17 @@
+{% extends 'system_app/base.html' %}
+{% block content %}
+<h1>Data : </h1>
+
+<hr>
+<br>
+<ul>
+    {% for data in all_data %}
+    <li>{{data.log_date.day}} {{data.log_date.month}} {{data.log_category}} {{data.message}}</li>
+    {% empty %}
+    <h3>There is no data</h3>
+    {% endfor %}
+</ul>
+<br>
+<hr>
+<a href="{% url 'system_app:index' %}">Back</a>
+{% endblock content %}
