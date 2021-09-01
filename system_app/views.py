@@ -4,6 +4,7 @@ from datetime import datetime
 
 from django.shortcuts import render
 from collections import defaultdict
+from datetime import datetime
 from .models import Charts
 
 from django.contrib.auth.decorators import login_required
@@ -56,3 +57,37 @@ def show_data(request):
     context = {'all_data':all_data}
     print(all_data)
     return render(request, 'system_app/show_data.html', context)
+
+
+def data_timeline(request):
+    data_dict = defaultdict(int)
+    all_data = Charts.objects.all()
+    for i in all_data:
+        date_string = i.log_date.strftime("%m-%d %H:%M:%S")
+        print(date_string)
+        data_dict[date_string] +=1
+    keys = data_dict.keys()
+    keys = list(keys)
+    values = data_dict.values()
+    values = list(values)
+
+    context = {'keys':keys, 'values':values}
+    return render(request, 'system_app/data_timeline.html', context)
+
+
+
+def data_pie(request):
+    data_dict = defaultdict(int)
+    all_data = Charts.objects.all()
+    for i in all_data:
+        category = i.log_category
+        data_dict[category] +=1
+    # keys = data_dict.keys()
+    # keys = list(keys)
+    # values = data_dict.values()
+    # values = list(values)
+    print(data_dict)
+    data_dict = dict(data_dict)
+    # context = {'keys':keys, 'values':values}
+    context = {'data_dict' : data_dict}
+    return render(request, 'system_app/data_pie.html', context)

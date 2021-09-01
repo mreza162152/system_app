@@ -17,6 +17,8 @@
         <a href="{% url 'system_app:index' %}">Home</a>
         <a href="{% url 'system_app:load_data' %}">Load Data</a>
         <a href="{% url 'system_app:show_data' %}">Show Data</a>
+        <a href="{% url 'system_app:data_timeline' %}">Timeline Chart</a>
+        <a href="{% url 'system_app:data_pie' %}">Pie Chart</a>
         {% if user.is_authenticated %}
         Hello, {{ user.username }}
         <a href="{% url 'users:logout' %}">Log out</a>
@@ -30,9 +32,10 @@
         {% endblock content %}
     </main>
     <footer>
+        {% block javascript %}
+        {% endblock javascript %}
     </footer>
 
-    <script src="scripts.js"></script>
 </body>
 
 </html>
