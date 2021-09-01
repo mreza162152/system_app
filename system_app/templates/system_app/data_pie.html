@@ -14,9 +14,9 @@
     </p>
 </figure>
 
-{% for key, value in data_dict.items %}
+<!-- {% for key, value in data_dict.items %}
 <p>{{key}} {{value}}</p>
-{% endfor %}
+{% endfor %} -->
 
 {% endblock content %}
 
@@ -25,6 +25,16 @@
 <script>
 
     // Build the chart
+
+    var data_list = {{ data_list| safe}};
+    console.log(data_list);
+    // data_list = data_list.substring(1)
+    // data_list = data_list.slice(0, -1)
+    // console.log(data_list);
+    // var array_data = JSON.parse("[" + data_list + "]")
+    // console.log(array_data)
+
+
     Highcharts.chart('container', {
         chart: {
             plotBackgroundColor: null,
@@ -33,7 +43,7 @@
             type: 'pie'
         },
         title: {
-            text: 'Browser market shares in January, 2018'
+            text: 'Messages Category'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -53,33 +63,11 @@
                 showInLegend: true
             }
         },
-        series: [
-
-            {
-                name: 'Brands',
-                colorByPoint: true,
-                data: [{
-                    name: 'Chrome',
-                    y: 61.41,
-                    sliced: true,
-                    selected: true
-                }, {
-                    name: 'Internet Explorer',
-                    y: 11.84
-                }, {
-                    name: 'Firefox',
-                    y: 10.85
-                }, {
-                    name: 'Edge',
-                    y: 4.67
-                }, {
-                    name: 'Safari',
-                    y: 4.18
-                }, {
-                    name: 'Other',
-                    y: 7.05
-                }]
-            }]
+        series: [{
+            name: 'Message percents',
+            colorByPoint: true,
+            data: data_list
+        }]
     });
 
 </script>

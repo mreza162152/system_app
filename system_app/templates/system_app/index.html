@@ -1,12 +1,21 @@
 {% extends 'system_app/base.html' %}
 
 
-{% block content %}
-<h1>Home page</h1>
-
-
-
-{% endblock content %}
+{% block page_header %}
+<div class="jumbotron">
+    <h1 class="display-4">System Monitoring Website.</h1>
+    <hr>
+    <p class="lead">To see data you must first load the data. After loading data you can go to other pages to visualize
+        data.
+    </p>
+    {% if user.is_authenticated %}
+    {% else %}
+    <p class="lead">If you are not registered, please register.
+    </p>
+    {% endif %}
+    <a class="btn btn-lg btn-primary" href="{% url 'users:register' %}" role="button">Register &raquo;</a>
+</div>
+{% endblock page_header %}
 
 {% block javascript %}
 {% endblock javascript %}

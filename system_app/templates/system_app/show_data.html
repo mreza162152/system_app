@@ -1,16 +1,33 @@
 {% extends 'system_app/base.html' %}
 {% block content %}
-<h1>Data : </h1>
 
-<hr>
-<br>
-<ul>
-    {% for data in all_data %}
-    <li>{{data.log_date.day}} {{data.log_date.month}} {{data.log_category}} {{data.message}}</li>
-    {% empty %}
-    <h3>There is no data</h3>
-    {% endfor %}
-</ul>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container container-fluid">
+        <h1 class="display-4">Data Table: </h1>
+        <hr>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>&nbsp;&nbsp;</th>
+                <th>Category</th>
+                <th>&nbsp;&nbsp;</th>
+                <th>Message</th>
+            </tr>
+
+            {% for data in all_data %}
+            <tr>
+                <td>{{data.log_date|date:'M-d H:i'}} </td>
+                <td>&nbsp;&nbsp;</td>
+                <td>{{data.log_category}}</td>
+                <td>&nbsp;&nbsp;</td>
+                <td>{{data.message}}</td>
+            </tr>
+            {% empty %}
+            <h3>There is no data</h3>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 <br>
 <hr>
 <a href="{% url 'system_app:index' %}">Back</a>

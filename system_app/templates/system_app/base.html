@@ -1,3 +1,5 @@
+{% load bootstrap4 %}
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -7,29 +9,73 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Page Title</title>
+    <title>System Monitoring</title>
     <meta name="description" content="">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
 </head>
 
 <body>
-    <header>
-        <a href="{% url 'system_app:index' %}">Home</a>
-        <a href="{% url 'system_app:load_data' %}">Load Data</a>
-        <a href="{% url 'system_app:show_data' %}">Show Data</a>
-        <a href="{% url 'system_app:data_timeline' %}">Timeline Chart</a>
-        <a href="{% url 'system_app:data_pie' %}">Pie Chart</a>
-        {% if user.is_authenticated %}
-        Hello, {{ user.username }}
-        <a href="{% url 'users:logout' %}">Log out</a>
-        {% else %}
-        <a href="{% url 'users:register' %}">Register</a> -
-        <a href="{% url 'users:login' %}">Log in</a>
-        {% endif %}
-    </header>
-    <main>
-        {% block content %}
-        {% endblock content %}
+    <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+        <a class="navbar-brand" href="{% url 'system_app:index' %}">Home</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span></button>
+
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="{% url 'system_app:load_data' %}">Load Data</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="{% url 'system_app:show_data' %}">Show Data</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="{% url 'system_app:data_timeline' %}">Timeline Chart</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="{% url 'system_app:data_pie' %}">Pie Chart</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <span class="navbar-text">Hello, {{ user.username }}</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:logout' %}">Log out</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main" class="container">
+        <div class="pb-2 mb-2 border-bottom">
+            {% block page_header %}
+            {% endblock page_header %}
+        </div>
+        <div>
+            {% block content %}
+            {% endblock content %}
+        </div>
     </main>
     <footer>
         {% block javascript %}

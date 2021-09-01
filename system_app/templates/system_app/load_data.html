@@ -1,17 +1,20 @@
 {% extends 'system_app/base.html' %}
 
-{% block content %}
 
-<h1>Data Loading Page</h1>
+{% block page_header %}
+<div class="jumbotron">
+    <h1 class="display-4">Data Loading Page.</h1>
+    <hr>
+    <p class="lead"> Congrats {{user.username}}, your data has been loaded successfully.</p>
+    <p class="lead">Now you can visualize data in other pages.</p>
+</div>
+{% endblock page_header %}
+
+{% block content %}
 <br>
-<hr>
-<h2>Data has been loaded</h2>
-<br>
-<hr>
 
 <a href="{% url 'system_app:index' %}">Back</a>
-
-{% endblock content %}
+{% endblock content%}
 
 {% block javascript %}
 {% endblock javascript %}
