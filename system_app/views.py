@@ -54,34 +54,14 @@ def show_data(request):
     context = {'all_data':all_data}
     return render(request, 'system_app/show_data.html', context)
 
-
-# def data_timeline(request):
-#     data_dict = defaultdict(int)
-#     all_data = Charts.objects.all()
-#     for i in all_data:
-#         date_string = i.log_date.strftime("%m-%d %H:%M:%S")
-#         # print(date_string)
-#         data_dict[date_string] +=1
-#     keys = data_dict.keys()
-#     keys = list(keys)
-#     values = data_dict.values()
-#     values = list(values)
-#     # with open('dict.csv', 'w') as csv_file:  
-#     #     writer = csv.writer(csv_file)
-#     #     for key, value in data_dict.items():
-#     #         writer.writerow([key, value])  
-
-#     context = {'keys':keys, 'values':values}
-#     return render(request, 'system_app/data_timeline.html', context)
-
-
+@login_required
 def data_timeline(request):
     data_dict = defaultdict(int)
     all_data = Charts.objects.all()
     for i in all_data:
         date_string = i.log_date.strftime("%m-%d %H:%M:%S")
-        # print(date_string)
         data_dict[date_string] +=1
+
     keys = data_dict.keys()
     keys = list(keys)
     keys.insert(0, 'Date')
@@ -89,20 +69,17 @@ def data_timeline(request):
     values = list(values)
     values.insert(0,'Total Messages')
 
-    # print(data_dict)
-
     context = {'values':values, 'keys':keys}
-    # context = {'data_dict': data_dict}
     return render(request, 'system_app/data_timeline.html', (context))
 
-
-
+@login_required
 def data_pie(request):
     data_dict = defaultdict(int)
     all_data = Charts.objects.all()
     for i in all_data:
         category = i.log_category
         data_dict[category] +=1
+
     keys = data_dict.keys()
     keys = list(keys)
     values = data_dict.values()
@@ -111,9 +88,6 @@ def data_pie(request):
     data_list = []
     for i in range(len(keys)):
         data_list.append({'name': keys[i], 'y': values[i]})
-    # data_dict = dict(data_dict)
-    # context = {'keys':keys, 'values':values}
-    # context = {'data_dict' : data_dict}
 
     context = {'data_list' : json.dumps(data_list)}
     return render(request, 'system_app/data_pie.html', context)

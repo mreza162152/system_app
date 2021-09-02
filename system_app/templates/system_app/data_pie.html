@@ -14,26 +14,15 @@
     </p>
 </figure>
 
-<!-- {% for key, value in data_dict.items %}
-<p>{{key}} {{value}}</p>
-{% endfor %} -->
-
 {% endblock content %}
 
-{% block javascript %}
 
+{% block javascript %}
 <script>
 
-    // Build the chart
 
     var data_list = {{ data_list| safe}};
     console.log(data_list);
-    // data_list = data_list.substring(1)
-    // data_list = data_list.slice(0, -1)
-    // console.log(data_list);
-    // var array_data = JSON.parse("[" + data_list + "]")
-    // console.log(array_data)
-
 
     Highcharts.chart('container', {
         chart: {
