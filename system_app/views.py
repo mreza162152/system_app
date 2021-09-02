@@ -42,7 +42,7 @@ def load_data(request):
             pure_message = extra_message[space_index+1:]
 
             data = Charts(log_date = date_obj, log_category = category, message = pure_message)
-            # data.save()
+            data.save()
 
     return render(request, 'system_app/load_data.html')
 
