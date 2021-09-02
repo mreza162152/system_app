@@ -8,7 +8,7 @@
 
 
 
-{% block content %}
+{% block table_content %}
 
 <form method="post" action="{% url 'users:login' %}" class="form">
     {% csrf_token %}
@@ -20,4 +20,4 @@
     <input type="hidden" name="next" value="{% url 'system_app:index' %}" />
 </form>
 
-{% endblock content %}
+{% endblock table_content %}

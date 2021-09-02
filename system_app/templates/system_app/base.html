@@ -1,4 +1,6 @@
+{% load static %}
 {% load bootstrap4 %}
+
 
 <!DOCTYPE html>
 
@@ -11,10 +13,55 @@
 
     <title>System Monitoring</title>
     <meta name="description" content="">
-    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
 
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
+
+    <style>
+        .highcharts-figure,
+        .highcharts-data-table table {
+            min-width: 360px;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td,
+        .highcharts-data-table th,
+        .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr,
+        .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+    </style>
 </head>
 
 <body>
@@ -38,16 +85,6 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a href="{% url 'system_app:data_timeline' %}">Timeline Chart</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a href="{% url 'system_app:data_pie' %}">Pie Chart</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <span class="navbar-text">Hello, {{ user.username }}</span>
@@ -67,14 +104,36 @@
         </div>
     </nav>
 
-    <main role="main" class="container">
-        <div class="pb-2 mb-2 border-bottom">
+    <main role="main">
+        <div class="pb-2 mb-2  container">
             {% block page_header %}
             {% endblock page_header %}
         </div>
         <div>
             {% block content %}
             {% endblock content %}
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-sm border-right">
+                    {% block pie_content %}
+                    {% endblock pie_content %}
+                </div>
+
+                <div class="col-sm">
+                    {% block time_content %}
+                    {% endblock time_content %}
+                </div>
+            </div>
+            <div>
+                {% block border_content %}
+                {% endblock border_content %}
+            </div>
+
+            <div class="pb-2 mb-2 border-bottom container">
+                {% block table_content %}
+                {% endblock table_content %}
+            </div>
         </div>
     </main>
     <footer>

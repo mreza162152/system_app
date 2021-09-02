@@ -6,15 +6,13 @@
     <h1 class="display-4">Data Loading Page.</h1>
     <hr>
     <p class="lead"> Congrats {{user.username}}, your data has been loaded successfully.</p>
-    <p class="lead">Now you can visualize data in other pages.</p>
+    <p class="lead">Now you can visualize data in <a href="{% url 'system_app:show_data' %}">Show Data</a> page.</p>
 </div>
-{% endblock page_header %}
-
-{% block content %}
-<br>
 
 <a href="{% url 'system_app:index' %}">Back</a>
-{% endblock content%}
+{% endblock page_header %}
+
+
 
 {% block javascript %}
 {% endblock javascript %}

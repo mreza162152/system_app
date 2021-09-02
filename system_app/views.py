@@ -49,45 +49,44 @@ def load_data(request):
 
 @login_required
 def show_data(request):
-    all_data = Charts.objects.all()
-    all_data = all_data[:10]
-    context = {'all_data':all_data}
-    return render(request, 'system_app/show_data.html', context)
 
-@login_required
-def data_timeline(request):
-    data_dict = defaultdict(int)
-    all_data = Charts.objects.all()
-    for i in all_data:
-        date_string = i.log_date.strftime("%m-%d %H:%M:%S")
-        data_dict[date_string] +=1
+######### PIE
 
-    keys = data_dict.keys()
-    keys = list(keys)
-    keys.insert(0, 'Date')
-    values = data_dict.values()
-    values = list(values)
-    values.insert(0,'Total Messages')
-
-    context = {'values':values, 'keys':keys}
-    return render(request, 'system_app/data_timeline.html', (context))
-
-@login_required
-def data_pie(request):
-    data_dict = defaultdict(int)
-    all_data = Charts.objects.all()
-    for i in all_data:
+    pie_data_dict = defaultdict(int)
+    pie_all_data = Charts.objects.all()
+    for i in pie_all_data:
         category = i.log_category
-        data_dict[category] +=1
+        pie_data_dict[category] +=1
 
-    keys = data_dict.keys()
-    keys = list(keys)
-    values = data_dict.values()
-    values = list(values)
+    pie_keys = pie_data_dict.keys()
+    pie_keys = list(pie_keys)
+    pie_values = pie_data_dict.values()
+    pie_values = list(pie_values)
 
     data_list = []
-    for i in range(len(keys)):
-        data_list.append({'name': keys[i], 'y': values[i]})
+    for i in range(len(pie_keys)):
+        data_list.append({'name': pie_keys[i], 'y': pie_values[i]})
 
-    context = {'data_list' : json.dumps(data_list)}
-    return render(request, 'system_app/data_pie.html', context)
+###### TIMELINE
+
+    time_data_dict = defaultdict(int)
+    time_all_data = Charts.objects.all()
+    for i in time_all_data:
+        date_string = i.log_date.strftime("%m-%d %H:%M:%S")
+        time_data_dict[date_string] +=1
+
+    time_keys = time_data_dict.keys()
+    time_keys = list(time_keys)
+    time_keys.insert(0, 'Date')
+    time_values = time_data_dict.values()
+    time_values = list(time_values)
+    time_values.insert(0,'Total Messages')
+
+####### DATA TABLE
+ 
+
+    table_all_data = Charts.objects.all()
+    table_all_data = table_all_data[:10]
+
+    context = {'data_list' : json.dumps(data_list), 'time_values':time_values, 'time_keys':time_keys, 'table_all_data':table_all_data}
+    return render(request, 'system_app/show_data.html', context)

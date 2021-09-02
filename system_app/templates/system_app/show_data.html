@@ -1,9 +1,55 @@
 {% extends 'system_app/base.html' %}
+{% load static %}
 {% block content %}
 
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+
+{% endblock content %}
+
+
+{% block pie_content %}
+
+<figure class="highcharts-figure">
+    <!-- PIE CHART -->
+    <div id="pie-container"></div>
+    <p class="highcharts-description">
+        This pie chart shows the ratio among categories messages.
+    </p>
+</figure>
+<br>
+
+{% endblock pie_content %}
+
+{% block time_content %}
+<figure class="highcharts-figure">
+    <!-- TIMELINE CHART -->
+    <div id="timeline-container"></div>
+    <p class="highcharts-description">
+        This Timeline chart showing the amount of data received per day. The individual data points can
+        be clicked to display more information.
+    </p>
+</figure>
+
+
+{% endblock time_content %}
+
+{% block border_content %}
+<br>
+<hr>
+<br>
+{% endblock border_content %}
+
+{% block table_content %}
 <div class="jumbotron jumbotron-fluid">
     <div class="container container-fluid">
         <h1 class="display-4">Data Table: </h1>
+        <h4>Latest 10 logs</h4>
         <hr>
         <table>
             <tr>
@@ -14,13 +60,13 @@
                 <th>Message</th>
             </tr>
 
-            {% for data in all_data %}
+            {% for table_data in table_all_data %}
             <tr>
-                <td>{{data.log_date|date:'M-d H:i'}} </td>
+                <td>{{table_data.log_date|date:'M-d H:i'}} </td>
                 <td>&nbsp;&nbsp;</td>
-                <td>{{data.log_category}}</td>
+                <td>{{table_data.log_category}}</td>
                 <td>&nbsp;&nbsp;</td>
-                <td>{{data.message}}</td>
+                <td>{{table_data.message}}</td>
             </tr>
             {% empty %}
             <h3>There is no data</h3>
@@ -28,10 +74,200 @@
         </table>
     </div>
 </div>
-<br>
-<hr>
+
 <a href="{% url 'system_app:index' %}">Back</a>
-{% endblock content %}
+
+{% endblock table_content %}
+
+
+
 
 {% block javascript %}
+<script>
+
+
+
+    ///////////////////////////////// Pie Chart
+
+
+    var pie_data_list = {{ data_list| safe}};
+    // console.log(pie_data_list);
+
+    Highcharts.chart('pie-container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Messages Category'
+        },
+        subtitle: {
+            text: 'Pie Chart'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            name: 'Message percents',
+            colorByPoint: true,
+            data: pie_data_list
+        }]
+    });
+
+
+
+
+    ///////////////////////////// Timeline Chart
+
+    var time_keys = {{ time_keys | safe }};
+    var time_values = {{ time_values| safe }};
+    console.log(time_keys)
+    console.log(time_values)
+
+    Highcharts.addEvent(Highcharts.Point, 'click', function () {
+        if (this.series.options.className.indexOf('popup-on-click') !== -1) {
+            const chart = this.series.chart;
+            const date = Highcharts.dateFormat('%A, %b %e, %Y', this.x);
+            const text = `<b>${date}</b><br/>${this.y} ${this.series.name}`;
+
+            const anchorX = this.plotX + this.series.xAxis.pos;
+            const anchorY = this.plotY + this.series.yAxis.pos;
+            const align = anchorX < chart.chartWidth - 200 ? 'left' : 'right';
+            const x = align === 'left' ? anchorX + 10 : anchorX - 10;
+            const y = anchorY - 30;
+            if (!chart.sticky) {
+                chart.sticky = chart.renderer
+                    .label(text, x, y, 'callout', anchorX, anchorY)
+                    .attr({
+                        align,
+                        fill: 'rgba(0, 0, 0, 0.75)',
+                        padding: 10,
+                        zIndex: 7 // Above series, below tooltip
+                    })
+                    .css({
+                        color: 'white'
+                    })
+                    .on('click', function () {
+                        chart.sticky = chart.sticky.destroy();
+                    })
+                    .add();
+            } else {
+                chart.sticky
+                    .attr({ align, text })
+                    .animate({ anchorX, anchorY, x, y }, { duration: 250 });
+            }
+        }
+    });
+
+
+    Highcharts.chart('timeline-container', {
+
+        chart: {
+            scrollablePlotArea: {
+                minWidth: 700
+            }
+        },
+
+        data: {
+            columns: [
+                time_keys,
+                time_values,
+            ]
+        },
+
+        title: {
+            text: 'Total Messages per Day'
+        },
+
+        subtitle: {
+            text: 'Timeline Chart'
+        },
+
+        xAxis: {
+            tickInterval: 24 * 3600 * 1000,
+            tickWidth: 0,
+            gridLineWidth: 1,
+            labels: {
+                align: 'left',
+                x: 3,
+                y: -3
+            }
+        },
+
+        yAxis: [{ // left y axis
+            title: {
+                text: null
+            },
+            labels: {
+                align: 'left',
+                x: 3,
+                y: 16,
+                format: '{value:.,0f}'
+            },
+            showFirstLabel: false
+        }, { // right y axis
+            linkedTo: 0,
+            gridLineWidth: 0,
+            opposite: true,
+            title: {
+                text: null
+            },
+            labels: {
+                align: 'right',
+                x: -3,
+                y: 16,
+                format: '{value:.,0f}'
+            },
+            showFirstLabel: false
+        }],
+
+        legend: {
+            align: 'left',
+            verticalAlign: 'top',
+            borderWidth: 0
+        },
+
+        tooltip: {
+            shared: true,
+            crosshairs: true
+        },
+
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                className: 'popup-on-click',
+                marker: {
+                    lineWidth: 1
+                }
+            }
+        },
+
+        series: [{
+            name: 'All sessions',
+            lineWidth: 3,
+            marker: {
+                radius: 4
+            }
+        }]
+    });
+
+
+</script>
 {% endblock javascript %}
